@@ -1,0 +1,27 @@
+version: '3'
+services:
+  test-db:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: test
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    command: [ "postgres", "-c", "log_statement=all" ]
+
+  test-server:
+    build:
+      context: .
+      dockerfile: ./packages/server/Dockerfile.test
+    env_file:
+      - .env.test
+    volumes:
+      - .:/app
+    command: yarn test:e2e
+    depends_on:
+      test-db:
+        condition: service_healthy

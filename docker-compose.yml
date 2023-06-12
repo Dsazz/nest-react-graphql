@@ -1,0 +1,35 @@
+version: '3'
+services:
+  server:
+    build:
+      context: ./packages/server
+      dockerfile: packages/server/Dockerfile.dev
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+#  client:
+#    build:
+#      context: ./packages/client
+#      dockerfile: Dockerfile.dev
+#    volumes:
+#      - ./client:/usr/src/app
+#      - /usr/src/app/node_modules
+#    ports:
+#      - 4200:4200
+#    env_file:
+#      - ./client/.env.${NODE_ENV}
+  db:
+    image: postgres:15
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+volumes:
+  pgdata:

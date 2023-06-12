@@ -1,0 +1,18 @@
+# Use the official lightweight Node.js 20 image.
+FROM node:20
+RUN apt-get update && apt-get install -y g++ make python3-pip
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and yarn.lock files
+COPY package.json yarn.lock ./
+
+# Install dependencies
+RUN yarn install
+
+# Copy local code to the container image.
+COPY . ./
+
+# Run e2e tests
+CMD ["yarn", "test:e2e"]

@@ -1,0 +1,21 @@
+# Base image
+FROM node:20
+LABEL authors="stanislav.stepanenko"
+
+# Set working directory
+WORKDIR /usr/src/app
+
+# Copy package.json and yarn.lock
+COPY package.json yarn.lock ./
+
+# Install dependencies
+RUN yarn install
+
+# Copy all files
+COPY . .
+
+# Expose API port to the outside
+EXPOSE 3000
+
+# Launch application
+CMD ["yarn", "start:dev"]
